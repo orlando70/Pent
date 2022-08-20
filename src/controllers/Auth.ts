@@ -8,23 +8,22 @@ export default class AuthController {
     const result = await AuthService.Register(req.body);
     return res.send(
         successResponse({
-          message: '',
+          message: 'Registration Successful',
           data: result,
         }),
     );
   };
 
-//   public static Login = async (req: AuthenticatedRequest, res: Response) => {
-//     const { files } = req;
+  public static Login = async (req: Request, res: Response) => {
 
-//     const result = await AuthService.Login({ accountId: req.session.user, files });
-//     return res.send(
-//         successResponse({
-//           message: '',
-//           data: result,
-//         }),
-//     );
-//   };
+    const result = await AuthService.Login(req.body);
+    return res.send(
+        successResponse({
+          message: 'Login Successful',
+          data: result,
+        }),
+    );
+  };
 
   
 
