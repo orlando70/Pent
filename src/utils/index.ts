@@ -3,8 +3,12 @@ import crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import { Types } from 'mongoose';
 import config from '../config';
+import moment from 'moment'
+import redis from '../database/redis'
 // eslint-disable-next-line import/order
 import type { Response } from 'express';
+import { IUser } from '../database/models/User';
+import {TokenFlag} from '../database/enum'
 
 type JwtData = jwt.JwtPayload & {
   userId: string;
@@ -67,16 +71,12 @@ export async function generateJWTToken(
 
 export async function decodeToken(token: string): Promise<JwtData> {
   return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      config.app.secret,
-      (err: any, decoded: jwt.JwtPayload | undefined) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(decoded as JwtData);
-      },
-    );
+    jwt.verify(token, config.app.secret, (err: any, decoded) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(decoded as JwtData);
+    });
   });
 }
 
@@ -89,3 +89,33 @@ export function success(res: Response, payload: SuccessResponsePayload) {
     ...(spreadData || {}),
   });
 }
+
+
+export const createSession = async (
+  user: IUser,
+  tokenFlag = TokenFlag.AUTH,
+) => {
+  const token = await generateJWTToken({
+    userId: user.id || user._id.toString(),
+    flag: tokenFlag,
+  });
+  const decodedToken = await decodeToken(token);
+
+  const sessionKeyPrefix = `sessions:${user.id}`;
+  const sessionKey = `${sessionKeyPrefix}:${decodedToken.counter}`;
+  const expires = moment().diff(moment(decodedToken.exp), 'seconds');
+
+  await redis.setex(sessionKey, expires, token);
+  await redis.sadd(sessionKeyPrefix, sessionKey);
+  await redis.expire(sessionKeyPrefix, expires);
+
+  return token;
+};
+
+export const deleteSessions = async (userId: Types.ObjectId | string) => {
+  const sessionKeyPrefix = `sessions:${userId.toString()}`;
+  const sessions = await redis.smembers(sessionKeyPrefix);
+
+  await Promise.all(sessions.map((session) => redis.del(session)));
+  await redis.del(sessionKeyPrefix);
+};

@@ -5,6 +5,7 @@ import Generic from './generic';
 export interface IUser extends Generic {
   email: string;
   username: string;
+  password: string;
 }
 
 type Overrides = Record<string, any>;
@@ -22,6 +23,9 @@ const schema = new Schema<IUser, ModelType>(
     username: {
       type: String,
       unique: true
+    },
+    password: {
+      type: String
     }
   },
   { timestamps: true },
