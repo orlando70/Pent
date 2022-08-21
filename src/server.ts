@@ -26,7 +26,7 @@ const startServer = async () => {
 const start = async () => {
   try {
     await initialize();
-    // await seedApartment();
+    await seedApartment();
     await startServer();
   } catch (e) {
     console.log(e);
