@@ -17,7 +17,7 @@ const startServer = async () => {
 
   server.listen(config.app.port, () => {
     console.log(
-      `!💥 Server Started and Listening on Port: ${config.app.port} with PID: ${process.pid}`,
+      `! Server Started and Listening on Port: ${config.app.port} with PID: ${process.pid}`,
     );
     (global as any).isStartingUp = false;
   });
