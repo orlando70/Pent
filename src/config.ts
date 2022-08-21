@@ -39,8 +39,6 @@ type Config = {
     };
 };
 
-const isTestEnvironment = process.env.APP_ENV === AppEnvironmentEnum.TEST;
-
 const config: Config = {
     env: {
         isDevelopment: process.env.NODE_ENV === AppEnvironmentEnum.DEVELOPMENT,
