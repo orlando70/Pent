@@ -5,14 +5,14 @@ interface Session {
     token: string;
     user: IUser;
 }
-
+  
 export interface AuthenticatedRequest extends Request {
-    session: Session
+    session?: Session;
   }
 
-// export interface FileUploadRequest extends AuthenticatedRequest {
-//   file: Express.MulterS3.File;
-// }
+export interface FileUploadRequest extends AuthenticatedRequest {
+  File?: Express.MulterS3.File;
+}
 
 export function successResponse(result: { message?: string; data: any; pageData?: any }) {
   return {

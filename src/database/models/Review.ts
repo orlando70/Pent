@@ -10,6 +10,7 @@ export interface IReview extends Generic {
   description: string;
   isHelpful: boolean;
   helpfulCount: number;
+  photos: string[];
 }
 
 type Overrides = Record<string, any>;
@@ -20,22 +21,22 @@ type ModelType = Model<IReview, {}, Overrides>;
 const schema = new Schema<IReview, ModelType>(
   {
     apartmentId: {
-    type: Schema.Types.ObjectId,
-    ref: ApartmentModel,
-  },
+      type: Schema.Types.ObjectId,
+      ref: ApartmentModel,
+    },
     userId: {
-    type: Schema.Types.ObjectId,
-    ref: UserModel,
-  },
+      type: Schema.Types.ObjectId,
+      ref: UserModel,
+    },
     description: {
       type: String,
     },
-    isHelpful: {
-      type: Boolean,
-      default: false,
-    },
     helpfulCount: {
       type: Number,
+      default: 0
+    },
+    photos: {
+      type: [String],
     }
   },
   { timestamps: true },

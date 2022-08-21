@@ -50,7 +50,7 @@ const config: Config = {
         env: process.env.APP_ENV as AppEnvironmentEnum,
         secret: process.env.APP_SECRET!,
         bcryptRounds: 10,
-        port: +process.env.PORT!,
+        port: +process.env.PORT! || 5000,
     },
     db: {
         uri: process.env.DB_URI!

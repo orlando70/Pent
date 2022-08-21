@@ -5,10 +5,17 @@ import { Types } from 'mongoose';
 import config from '../config';
 import moment from 'moment'
 import redis from '../database/redis'
-// eslint-disable-next-line import/order
 import type { Response } from 'express';
 import { IUser } from '../database/models/User';
-import {TokenFlag} from '../database/enum'
+import { TokenFlag } from '../database/enum'
+import aws from 'aws-sdk'
+import path from 'path'
+import multer, { FileFilterCallback } from 'multer';
+import multerS3 from 'multer-s3';
+import { FileUploadRequest } from '../controllers';
+import { S3Client } from '@aws-sdk/client-s3'
+
+type DestinationCallback = (error: Error | null, destination: string) => void;
 
 type JwtData = jwt.JwtPayload & {
   userId: string;
@@ -17,10 +24,10 @@ type JwtData = jwt.JwtPayload & {
 };
 
 type SuccessResponsePayload = {
-    message?: string;
-    spreadData?: Record<string, any>;
-    data?: any;
-  };
+  message?: string;
+  spreadData?: Record<string, any>;
+  data?: any;
+};
 
 export function bcryptHash(password: string) {
   return bcrypt.hash(password, config.app.bcryptRounds);
@@ -31,17 +38,17 @@ export function bcryptCompare(password: string, hash: string) {
 }
 
 export function generateRandomCode(length: number) {
-    return crypto
-      .randomBytes(length * 3)
-      .toString('base64')
-      .split('+')
-      .join('')
-      .split('/')
-      .join('')
-      .split('=')
-      .join('')
-      .substr(0, length);
-  }
+  return crypto
+    .randomBytes(length * 3)
+    .toString('base64')
+    .split('+')
+    .join('')
+    .split('/')
+    .join('')
+    .split('=')
+    .join('')
+    .substr(0, length);
+}
 
 export async function generateJWTToken(
   payload: Record<string, any>,
@@ -119,3 +126,66 @@ export const deleteSessions = async (userId: Types.ObjectId | string) => {
   await Promise.all(sessions.map((session) => redis.del(session)));
   await redis.del(sessionKeyPrefix);
 };
+
+export function fileStorage(acceptedFileExtensions: string[]) {
+  let fileName: string;
+
+  const fileFilter = (req: FileUploadRequest, file: Express.MulterS3.File, callback: FileFilterCallback): void => {
+    if (!acceptedFileExtensions.length) {
+      return callback(null, true);
+    }
+    fileName = file.originalname.split(' ').join('');
+    const fileType = path.extname(file.originalname).substr(1);
+    if (acceptedFileExtensions.includes(fileType)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`File extension .${fileType} not allowed.`));
+  };
+
+  const s3 = new S3Client({
+    region: config.aws.awsRegion,
+    endpoint: config.aws.awsEndpoint,
+    forcePathStyle: true,
+    credentials: {
+      accessKeyId: config.aws.awsId,
+      secretAccessKey: config.aws.awsSecret,
+    }
+  });
+
+  const upload = multer({
+    storage: multerS3({
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      contentType: multerS3.AUTO_CONTENT_TYPE,
+      s3,
+      acl: 'public-read',
+      bucket: config.aws.awsBucketName,
+      key: (req: FileUploadRequest, file: Express.Multer.File, cb: DestinationCallback): void => {
+        return cb(null, `${Date.now()}-${fileName}`);
+      },
+    }),
+    fileFilter,
+  });
+  return upload;
+}
+
+export function fileDownload(keys: string[]) {
+  const download = keys.map((key) => {
+    const s3 = new aws.S3({
+      endpoint: config.aws.awsEndpoint, 
+      s3ForcePathStyle: true,
+    });
+  
+    aws.config.update({ accessKeyId: config.aws.awsId, secretAccessKey: config.aws.awsSecret });
+  
+    const myBucket = config.aws.awsBucketName;
+    const signedUrlExpireSeconds = 60 * 5;
+  
+    const url = s3.getSignedUrl('getObject', {
+      Bucket: myBucket,
+      Key: key,
+      Expires: signedUrlExpireSeconds,
+    });
+    return url;
+  })
+return download;
+}
