@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "start": "cross-env APP_ENV=local ./src/server.ts",
     "build": "rimraf ./build && tsc",
+    "start": "cross-env APP_ENV=local ./src/server.ts",
     "test": " cross-env NODE_ENV=test APP_ENV=test mocha -r ts-node/register --spec test/**/*.test.ts",
     "seed": "cross-env APP_ENV=local nodemon ./src/scripts/index.ts"
   },
