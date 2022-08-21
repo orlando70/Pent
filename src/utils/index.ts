@@ -144,7 +144,6 @@ export function fileStorage(acceptedFileExtensions: string[]) {
 
   const s3 = new S3Client({
     region: config.aws.awsRegion,
-    endpoint: config.aws.awsEndpoint,
     forcePathStyle: true,
     credentials: {
       accessKeyId: config.aws.awsId,
@@ -157,7 +156,6 @@ export function fileStorage(acceptedFileExtensions: string[]) {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       contentType: multerS3.AUTO_CONTENT_TYPE,
       s3,
-      acl: 'public-read',
       bucket: config.aws.awsBucketName,
       key: (req: FileUploadRequest, file: Express.Multer.File, cb: DestinationCallback): void => {
         return cb(null, `${Date.now()}-${fileName}`);
@@ -171,7 +169,6 @@ export function fileStorage(acceptedFileExtensions: string[]) {
 export function fileDownload(keys: string[]) {
   const download = keys.map((key) => {
     const s3 = new aws.S3({
-      endpoint: config.aws.awsEndpoint, 
       s3ForcePathStyle: true,
     });
   
