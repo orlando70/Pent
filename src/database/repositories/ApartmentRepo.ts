@@ -6,12 +6,16 @@ export default class ApartmentRepo {
     return Apartment.create(apartment);
   };
 
-  public static getApartmentById = async (id: Partial<IApartment>) => {
+  public static getApartmentById = async (id: string) => {
     return Apartment.findById(id);
   };
   
   public static getApartmentByQuery = async (condition: Partial<IApartment>) => {
     return Apartment.findOne(condition);
+  };
+
+  public static getAllApartment = async () => {
+    return Apartment.find();
   };
 
   public static updateApartmentById = async (

@@ -6,7 +6,6 @@ import initialize from './initialize';
 
 
 import config from './config';
-import { seedApartment } from './scripts';
 
 const startServer = async () => {
   (global as any).isStartingUp = true;
@@ -26,7 +25,6 @@ const startServer = async () => {
 const start = async () => {
   try {
     await initialize();
-    await seedApartment();
     await startServer();
   } catch (e) {
     console.log(e);
