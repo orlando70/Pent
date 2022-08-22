@@ -1,3 +1,17 @@
+**Note**
+----
+Look into `.env.example` file to get a sample of environment variables needed
+
+Files are uploaded to AWS S3 Bucket created manually by user
+
+**Scripts**
+----
+Install dependencies: `npm install`
+
+Start server: `npm run dev`
+
+Seed Apartment data to database(Optional): `npm seed`
+
 **Register**
 ----
 Registers a single user
@@ -98,6 +112,222 @@ Log in a single user
       "password": "clement"
     }
   ```
+  
+  **Create an apartment**
+----
+Creates an apartment and returns json data of apartment
+
+* **URL**
+
+  /apartment
+
+* **Method:**
+
+  `POST`
+  
+* **URL PARAMS**
+ 
+  `None`
+  
+* **AUTHORIZATION HEADER**
+ 
+  `None`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+    
+    ```
+          {
+            "status": "success",
+            "message": "Apartment created successfully",
+            "data": {
+              "apartment": {
+                "name": "bishop's court",
+                "description": "a bigger house",
+                "price": 500,
+                "_id": "6303c00bf265393be8f54177",
+                "createdAt": "2022-08-22T17:42:35.707Z",
+                "updatedAt": "2022-08-22T17:42:35.707Z",
+                "__v": 0
+              }
+            }
+          }
+    ```
+    
+* **Error Response:**
+
+  * **Code:** 400 SERVICE <br />
+    **Content:** `{ error : "An error occurred while creating a new apartment" }`
+    
+ * **Sample Call:**
+
+  ```javascript
+    {
+      "name": "bishop's court",
+      "description": "a bigger house",
+      "price": 500
+     }
+  ```
+  
+  
+  **Show Apartment**
+----
+Returns json data of a single apartment
+
+* **URL**
+
+  /apartment/:id
+
+* **Method:**
+
+  `GET`
+  
+* **URL PARAMS**
+ 
+  `id:[number]`
+  
+* **AUTHORIZATION HEADER**
+ 
+  `None`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+    
+    ```
+       {
+        "status": "success",
+        "message": "Apartment fetched successfully",
+        "data": {
+          "apartment": {
+            "_id": "630050902a5eed6ff4dc5656",
+            "name": "Zee Apartments",
+            "description": "Experience the best accomodation with state of the art facilities",
+            "price": 2990000,
+            "createdAt": "2022-08-20T03:10:08.353Z",
+            "updatedAt": "2022-08-20T03:10:08.353Z",
+            "__v": 0
+          }
+        }
+      }
+    ```
+    
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Apartment not found" }`
+    
+ * **Sample Call:**
+
+  ```javascript
+    {}
+  ```
+  
+  
+  **Show all apartments**
+----
+Returns json data of all apartments
+
+* **URL**
+
+  /apartments
+
+* **Method:**
+
+  `GET`
+  
+* **URL PARAMS**
+ 
+  `None`
+  
+* **AUTHORIZATION HEADER**
+ 
+  `None`
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+    
+    ```
+          {
+          "status": "success",
+          "message": "Apartments fetched successfully",
+          "data": {
+            "apartments": [
+              {
+                "_id": "630050902a5eed6ff4dc5654",
+                "name": "Aso Villa",
+                "description": "Experience the best accomodation with state of the art facilities",
+                "price": 1500000,
+                "createdAt": "2022-08-20T03:10:08.343Z",
+                "updatedAt": "2022-08-20T03:10:08.343Z",
+                "__v": 0
+              },
+              {
+                "_id": "630050902a5eed6ff4dc5651",
+                "name": "Suave Court",
+                "description": "Experience the best accomodation with state of the art facilities",
+                "price": 5990000,
+                "createdAt": "2022-08-20T03:10:08.326Z",
+                "updatedAt": "2022-08-20T03:10:08.326Z",
+                "__v": 0
+              },
+              {
+                "_id": "630050902a5eed6ff4dc5656",
+                "name": "Zee Apartments",
+                "description": "Experience the best accomodation with state of the art facilities",
+                "price": 2990000,
+                "createdAt": "2022-08-20T03:10:08.353Z",
+                "updatedAt": "2022-08-20T03:10:08.353Z",
+                "__v": 0
+              },
+              {
+                "_id": "630050902a5eed6ff4dc564f",
+                "name": "Brick House",
+                "description": "Experience the best accomodation with state of the art facilities",
+                "price": 5900000,
+                "createdAt": "2022-08-20T03:10:08.310Z",
+                "updatedAt": "2022-08-20T03:10:08.310Z",
+                "__v": 0
+              },
+              {
+                "_id": "6303bfd86746bdbfa4a7c475",
+                "name": "bishop's court",
+                "description": "a big house",
+                "price": 500,
+                "createdAt": "2022-08-22T17:41:44.294Z",
+                "updatedAt": "2022-08-22T17:41:44.294Z",
+                "__v": 0
+              },
+              {
+                "_id": "6303c00bf265393be8f54177",
+                "name": "bishop's court",
+                "description": "a bigger house",
+                "price": 500,
+                "createdAt": "2022-08-22T17:42:35.707Z",
+                "updatedAt": "2022-08-22T17:42:35.707Z",
+                "__v": 0
+              }
+            ]
+          }
+    }
+    ```
+    
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Apartments not found" }`
+    
+ * **Sample Call:**
+
+  ```javascript
+    {}
+  ```
+  
   
   **Post a review**
 ----
