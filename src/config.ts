@@ -28,7 +28,6 @@ type Config = {
         mode: string; // 'single' | 'cluster';
         host: string;
         port: number;
-        password: string;
     };
     aws: {
         awsId: string;
@@ -56,7 +55,7 @@ const config: Config = {
         mode: process.env.REDIS_MODE! || 'cluster',
         host: process.env.REDIS_HOST!,
         port: +process.env.REDIS_PORT!,
-        password: process.env.REDIS_PASSWORD!,
+      
     },
     aws: {
         awsId: process.env.AWS_ID!,

@@ -11,14 +11,12 @@ const redis = config.redis.mode === 'cluster'
     ],
     {
       redisOptions: {
-        password: config.redis.password,
       },
     },
   )
   : new Redis({
     port: config.redis.port || 6380,
     host: config.redis.host,
-    password: config.redis.password,
   });
 
 export default redis;
