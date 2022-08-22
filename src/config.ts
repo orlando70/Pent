@@ -35,7 +35,6 @@ type Config = {
         awsSecret: string;
         awsBucketName: string;
         awsRegion: string;
-        awsEndpoint: string;
     };
 };
 
@@ -64,7 +63,6 @@ const config: Config = {
         awsSecret: process.env.AWS_SECRET!,
         awsBucketName: process.env.AWS_BUCKET_NAME!,
         awsRegion: process.env.AWS_REGION!,
-        awsEndpoint: process.env.AWS_ENDPOINT!,
     },
 };
 

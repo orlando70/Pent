@@ -10,7 +10,7 @@ export interface IReview extends Generic {
   description: string;
   isHelpful: boolean;
   helpfulCount: number;
-  photos: string[];
+  files: string[];
 }
 
 type Overrides = Record<string, any>;
@@ -35,7 +35,7 @@ const schema = new Schema<IReview, ModelType>(
       type: Number,
       default: 0
     },
-    photos: {
+    files: {
       type: [String],
     }
   },

@@ -6,10 +6,11 @@ import { fileStorage } from '../utils';
 
 const router = Router();
 
-const photos = fileStorage(['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG']).array('photos', 2);
+const photos = fileStorage(['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG']).array('files', 2);
 
-router.post('/create', validateToken(TokenFlag.AUTH), photos, ReviewController.Create);
-router.patch('/update/:id', ReviewController.Update);
+router.post('/', validateToken(TokenFlag.AUTH), photos, ReviewController.Create);
+router.patch('/:id', ReviewController.Update);
 router.get('/', ReviewController.Get)
+router.get('/:id', ReviewController.GetOne)
 
 export default router;

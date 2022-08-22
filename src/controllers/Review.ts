@@ -29,6 +29,16 @@ export default class ReviewController {
       }),
     );
   };
+  public static GetOne = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await ReviewService.getOneReview(id);
+    return res.send(
+      successResponse({
+        message: 'Successfully fetched review',
+        data: result,
+      }),
+    );
+  };
 
   public static Update = async (req: Request, res: Response) => {
     const result = await ReviewService.updateReview(req.params.id);
